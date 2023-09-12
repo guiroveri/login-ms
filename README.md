@@ -1,2 +1,2 @@
 # login-ms
-login microservice
+this repository is intended to be a simple and effective example of a login microservice.
