@@ -8,6 +8,7 @@ using Presentation.Application.Controllers.Model;
 namespace Presentation.Application.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
@@ -34,6 +35,48 @@ namespace Presentation.Application.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost("/OlaPrimeiroNome")]
+        public string OlaPrimeiroNome([FromBody] modelopayload payload)
+        {
+            _ = OlaBuilder(payload);
+            return OlaBuilder(payload);
+
+        }
+
+        private static string OlaBuilder(modelopayload payload)
+        {
+            var numeroDeFeriados = CountHolidays(payload.Ano);
+            if (numeroDeFeriados < 4)
+                return $"Olá {payload.Nome}, no ano do seu nascimento houveram poucos feriados";
+
+            return $"Olá {payload.Nome}, no ano do seu nascimento houveram {numeroDeFeriados} feriados";
+        }
+
+        private static int CountHolidays(int year)
+        {
+            List<DateTime> holidays = new List<DateTime>
+        {
+            new DateTime(year, 1, 1),   // Ano Novo
+            new DateTime(year, 7, 4),   // Dia da Independência
+            new DateTime(year, 12, 25), // Natal
+            // Adicione outros feriados aqui
+        };
+
+            // Adicione mais feriados conforme necessário
+
+            int count = 0;
+
+            foreach (DateTime holiday in holidays)
+            {
+                if (holiday.Year == year)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
