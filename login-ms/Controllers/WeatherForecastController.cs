@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Presentation.Application.Controllers.Model;
+using Domain.Services;
+using System.Threading.Tasks;
+using Domain.Services.Model;
 
 namespace Presentation.Application.Controllers
 {
@@ -18,10 +21,12 @@ namespace Presentation.Application.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IPokemonService _pokemonService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IPokemonService pokemonService)
         {
             _logger = logger;
+            _pokemonService = pokemonService;
         }
 
         [HttpGet]
@@ -43,6 +48,12 @@ namespace Presentation.Application.Controllers
             _ = OlaBuilder(payload);
             return OlaBuilder(payload);
 
+        }
+
+        [HttpPost("/PokemonInformation")]
+        public Task<PokemonStatus> PokemonInformation([FromBody] string name)
+        {
+            return _pokemonService.PokemonInformation(name);
         }
 
         private static string OlaBuilder(modelopayload payload)
