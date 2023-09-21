@@ -1,9 +1,13 @@
-﻿using Infrastructure.Adapter.Model;
+﻿using Domain.Services.AdapterInterface;
+using Domain.Services.Model;
+using Infrastructure.Adapter.Model;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Adapter
 {
-    public class PokemonApi
+    public class PokemonApi : IPokemonApi
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseurl = "https://pokeapi.co/api/v2/";
@@ -22,9 +26,9 @@ namespace Infrastructure.Adapter
                 return null;
 
             var responsebody = await response.Content.ReadAsStringAsync();
-            var information = JsonConvert.DeserializeObject<PokemonStatus>(responsebody);
+            var information = JsonConvert.DeserializeObject<PokemonStatusResponse>(responsebody);
 
-            return information;
+            return information.ToPokemonStatus();
         }
 
     }
